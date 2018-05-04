@@ -18,6 +18,7 @@ extension KastaAPI {
         let nowImage: String
         let tags: String
         let codename: String
+        let mods: [Mod]
         
         static let decoder = KastaAPI.standardDecoder
         
@@ -30,6 +31,13 @@ extension KastaAPI {
             case nowImage = "now_image"
             case tags = "tags"
             case codename = "code_name"
+            case mods = "mods"
         }
+    }
+}
+
+extension KastaAPI.Campaign {
+    struct Mod: Codable {
+        let name: String
     }
 }
