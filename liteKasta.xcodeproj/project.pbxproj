@@ -21,6 +21,8 @@
 		A7EE880D2072630600CB7588 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE880C2072630600CB7588 /* Assets.xcassets */; };
 		A7EE88102072630600CB7588 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7EE880E2072630600CB7588 /* LaunchScreen.storyboard */; };
 		D0DD05360B4401ACAE664BF9 /* Pods_liteKasta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A09F010E4D2AD136FF375E8 /* Pods_liteKasta.framework */; };
+		DA22512E209F0DEF0064E883 /* SaleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA22512D209F0DEF0064E883 /* SaleCell.swift */; };
+		DAB3F8D2209F34F100D9959F /* SaleItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB3F8D1209F34F100D9959F /* SaleItemViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		A7EE880F2072630600CB7588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A7EE88112072630600CB7588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C66EDB89014D4C691D12592F /* Pods-liteKasta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-liteKasta.debug.xcconfig"; path = "Pods/Target Support Files/Pods-liteKasta/Pods-liteKasta.debug.xcconfig"; sourceTree = "<group>"; };
+		DA22512D209F0DEF0064E883 /* SaleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleCell.swift; sourceTree = "<group>"; };
+		DAB3F8D1209F34F100D9959F /* SaleItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleItemViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,10 +102,12 @@
 		A74C163D20739E44006459C3 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				DAB3F8D1209F34F100D9959F /* SaleItemViewModel.swift */,
 				A74C163E20739EBA006459C3 /* CampaignViewModel.swift */,
 				A7EE88072072630600CB7588 /* ViewController.swift */,
 				A74C16402073AFFC006459C3 /* ViewControllerState.swift */,
 				A74C16422073B9BE006459C3 /* CampaignCell.swift */,
+				DA22512D209F0DEF0064E883 /* SaleCell.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -288,7 +294,9 @@
 				A7EE88082072630600CB7588 /* ViewController.swift in Sources */,
 				A70B78992072796000B11254 /* Colors.swift in Sources */,
 				A7EE88062072630600CB7588 /* AppDelegate.swift in Sources */,
+				DAB3F8D2209F34F100D9959F /* SaleItemViewModel.swift in Sources */,
 				A74C16412073AFFC006459C3 /* ViewControllerState.swift in Sources */,
+				DA22512E209F0DEF0064E883 /* SaleCell.swift in Sources */,
 				A74C163A20738A83006459C3 /* ModelProtocols.swift in Sources */,
 				A7CE3FD22073887500D77D41 /* APIStubs.swift in Sources */,
 			);

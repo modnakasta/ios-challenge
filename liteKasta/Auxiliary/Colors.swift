@@ -18,8 +18,11 @@ extension UIColor {
         )
     }
     
+    
     static let appBackground = UIColor(rgb: 0x20202A)
     static let campaignCellBackground = UIColor.white
     static let normalText = UIColor.black
+    static let subtitledText = UIColor(rgb: 0xD2D2D4)
+    static let upcomingSalesButtonText = UIColor(rgb: 0x4FB748)
 }
 
