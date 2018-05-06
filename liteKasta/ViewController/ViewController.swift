@@ -61,6 +61,14 @@ class ViewController: UIViewController {
 // MARK: - ListAdapterDataSource
 
 extension ViewController: ListAdapterDataSource {
+    var sale: Sale {
+        return Sale(sales: [
+            SaleItem(title: "Saucony, Nike, Vans", desc: "Кроссовки, кеды, мокасины"),
+            SaleItem(title: "Levi's", desc: "Мировой бренд джинсовой одежды"),
+            SaleItem(title: "Платья Outlet", desc: "Лучшие женские наряды")
+        ])
+    }
+    
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         switch self.state {
         case .success(items: let items):
@@ -71,38 +79,66 @@ extension ViewController: ListAdapterDataSource {
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        let controller = ListSingleSectionController(cellClass: CampaignCell.self, configureBlock: { (item, cell) in
+        
+        if object is Campaign {
+
+            let controller = ListSingleSectionController(cellClass: CampaignCell.self, configureBlock: { (item, cell) in
+
+                let campaignCell = cell as! CampaignCell
+                let campaign = item as! Campaign
+
+                campaignCell.title.text = campaign.title
+                campaignCell.desc.text = campaign.desc
+                if let url = URL(string: "https://modnakasta.ua/imgw/loc/0x0/\(campaign.bannerPath)") {
+                    campaignCell.picture.af_setImage(withURL: url)
+                }
+
+            }, sizeBlock: { (item, context) -> CGSize in
+
+                let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
+                let height = CampaignCell.desiredHeightFor(columnWidth: width)
+
+                return CGSize(width: width, height: height)
+
+            })
             
-            let campaignCell = cell as! CampaignCell
-            let campaign = item as! Campaign
-            
-            campaignCell.title.text = campaign.title
-            campaignCell.desc.text = campaign.desc
-            if let url = URL(string: "https://modnakasta.ua/imgw/loc/0x0/\(campaign.bannerPath)") {
-                campaignCell.picture.af_setImage(withURL: url)
+            guard case .success(let items) = state else {
+                fatalError("Fetch state != .success, the collection should have no sections, yet the adapter requests one, wtf?")
             }
             
-        }, sizeBlock: { (item, context) -> CGSize in
+            controller.selectionDelegate = self
             
-            let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
-            let height = CampaignCell.desiredHeightFor(columnWidth: width)
+            let currentItem = object as! ListDiffable
+            let isFirstItem = currentItem.isEqual(toDiffableObject: items.first)
             
-            return CGSize(width: width, height: height)
+            controller.inset = UIEdgeInsets(top: isFirstItem ? 32 : 0, left: 16, bottom: 16, right: 16)
             
-        })
-        
-        guard case .success(let items) = state else {
-            fatalError("Fetch state != .success, the collection should have no sections, yet the adapter requests one, wtf?")
+            return controller
         }
-        
-        controller.selectionDelegate = self
-        
-        let currentItem = object as! ListDiffable
-        let isFirstItem = currentItem.isEqual(toDiffableObject: items.first)
-        
-        controller.inset = UIEdgeInsets(top: isFirstItem ? 32 : 0, left: 16, bottom: 16, right: 16)
-        
-        return controller
+        else {
+            let controller = ListSingleSectionController(cellClass: SaleCell.self, configureBlock: { (item, cell) in
+                
+                let saleCell = cell as! SaleCell
+                let sale = item as! Sale
+                
+                saleCell.setup(with: sale)
+                saleCell.upcomingSalesButtonClick = {
+                    if let webURL = URL(string: "https://modnakasta.ua/#soon") {
+                        UIApplication.shared.openURL(webURL)
+                    }
+                }
+                
+            }, sizeBlock: { (item, context) -> CGSize in
+                let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
+                let height = SaleCell.height
+                
+                return CGSize(width: width, height: height)
+            })
+            
+            controller.inset = UIEdgeInsets(top: 0.0, left: 16, bottom: 16, right: 16)
+            
+            return controller
+        }
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {
@@ -139,7 +175,13 @@ extension ViewController {
                     let response = try response.filterSuccessfulStatusAndRedirectCodes()
                     let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
                     let (activeCampaigns, _) = campaigns.filterActive(for: Date())
-                    let viewModels = activeCampaigns.map({ return Campaign(with: $0) }).filter({ !$0.isVirtual })
+                    var viewModels: [ListDiffable] = activeCampaigns.map({ return Campaign(with: $0) }).filter({ !$0.isVirtual })
+                    if viewModels.count > 3 {
+                        viewModels.insert(self.sale, at: 3)
+                    }
+                    else {
+                        viewModels.append(self.sale)
+                    }
                     self.state = .success(items: viewModels)
                     self.adapter.performUpdates(animated: true, completion: nil)
                     
