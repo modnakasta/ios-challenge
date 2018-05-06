@@ -16,7 +16,6 @@ extension ViewController {
         let countdownToDate: Date
         let bannerPath: String
         let codename: String
-        let isVirtual: Bool
         
         init(with aCampaign: KastaAPI.Campaign) {
             identifier = aCampaign.id
@@ -25,7 +24,6 @@ extension ViewController {
             countdownToDate = aCampaign.finishesAt
             bannerPath = aCampaign.nowImage
             codename = aCampaign.codename
-            isVirtual = aCampaign.mods.contains(where: { $0.name == "virtual" })
             super.init()
         }
     }

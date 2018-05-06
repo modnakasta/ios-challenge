@@ -9,7 +9,7 @@
 import Foundation
 
 extension KastaAPI {
-    struct Campaign: Codable, TimeFramed, Tagged {
+    struct Campaign: Codable, TimeFramed, Tagged, Modded {
         let id: Int
         let name: String
         let description: String
@@ -18,7 +18,7 @@ extension KastaAPI {
         let nowImage: String
         let tags: String
         let codename: String
-        let mods: [Mod]
+        let mods: [Mod]?
         
         static let decoder = KastaAPI.standardDecoder
         

@@ -174,8 +174,9 @@ extension ViewController {
                 case .success(let response):
                     let response = try response.filterSuccessfulStatusAndRedirectCodes()
                     let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
-                    let (activeCampaigns, _) = campaigns.filterActive(for: Date())
-                    var viewModels: [ListDiffable] = activeCampaigns.map({ return Campaign(with: $0) }).filter({ !$0.isVirtual })
+                    let realCampaigns = campaigns.filterVirtual()
+                    let (activeCampaigns, _) = realCampaigns.filterActive(for: Date())
+                    var viewModels = activeCampaigns.map({ return Campaign(with: $0) })
                     if viewModels.count > 3 {
                         viewModels.insert(self.sale, at: 3)
                     }
