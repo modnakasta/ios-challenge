@@ -23,6 +23,9 @@ extension UIColor {
     static let campaignCellBackground = UIColor.white
     static let normalText = UIColor.black
     static let subtitledText = UIColor(rgb: 0xD2D2D4)
-    static let upcomingSalesButtonText = UIColor(rgb: 0x4FB748)
+    
+    static let saleTitleText = UIColor(rgb: 0x181818)
+    static let saleDescriptionText = UIColor(rgb: 0x8E8E93)
+    static let saleButtonText = UIColor(rgb: 0x4FB748)
 }
 

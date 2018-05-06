@@ -19,11 +19,11 @@ extension ViewController {
             isOpaque = true
             
             title.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-            title.textColor = .black
+            title.textColor = .saleTitleText
             addSubview(title)
             
             desc.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-            desc.textColor = .lightGray
+            desc.textColor = .saleDescriptionText
             addSubview(desc)
         }
         
@@ -35,7 +35,7 @@ extension ViewController {
             super.layoutSubviews()
             
             title.frame = CGRect(x: 16, y: 8, width: bounds.width - 32, height: 22)
-            desc.frame = CGRect(x: 16, y: 28, width: bounds.width - 32, height: 18)
+            desc.frame = CGRect(x: 16, y: 32, width: bounds.width - 32, height: 18)
         }
     }
 }
@@ -45,6 +45,10 @@ extension ViewController {
         let header = UILabel()
         let footer = UIButton()
         let items = [SaleItemView(), SaleItemView(), SaleItemView()]
+        
+        static let height: CGFloat = 282.0
+        
+        var upcomingSalesButtonClick: (() -> Void)? = nil
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -60,8 +64,9 @@ extension ViewController {
             
             footer.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
             footer.contentHorizontalAlignment = .left
-            footer.setTitleColor(.upcomingSalesButtonText, for: .normal)
+            footer.setTitleColor(.saleButtonText, for: .normal)
             footer.setTitle(NSLocalizedString("text.all-upcoming-sales-button.title", comment: "All upcoming sales button text"), for: .normal)
+            footer.addTarget(self, action: #selector(upcomingSalesButtonTap), for: .touchUpInside)
             addSubview(footer)
             
             for item in items {
@@ -81,8 +86,12 @@ extension ViewController {
             footer.frame = CGRect(x: 16, y: bounds.height - 32, width: bounds.width - 32, height: 18)
             
             for (i, item) in items.enumerated() {
-                item.frame = CGRect(x: 0.0, y: Double(header.frame.origin.y + header.frame.height) + 4.0 + 64.0 * Double(i), width: Double(frame.width), height: 64.0)
+                item.frame = CGRect(x: 0.0, y: Double(header.frame.origin.y + header.frame.height) + 8.0 + 64.0 * Double(i), width: Double(frame.width), height: 64.0)
             }
+        }
+        
+        @objc private func upcomingSalesButtonTap() {
+            upcomingSalesButtonClick?()
         }
     }
 }
