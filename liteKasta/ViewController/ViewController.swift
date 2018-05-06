@@ -176,13 +176,8 @@ extension ViewController {
                     let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
                     let realCampaigns = campaigns.filterVirtual()
                     let (activeCampaigns, _) = realCampaigns.filterActive(for: Date())
-                    var viewModels = activeCampaigns.map({ return Campaign(with: $0) })
-                    if viewModels.count > 3 {
-                        viewModels.insert(self.sale, at: 3)
-                    }
-                    else {
-                        viewModels.append(self.sale)
-                    }
+                    var viewModels: [ListDiffable] = activeCampaigns.map({ return Campaign(with: $0) })
+                    viewModels.insert(self.sale, at: viewModels.count > 3 ? 3 : viewModels.count)
                     self.state = .success(items: viewModels)
                     self.adapter.performUpdates(animated: true, completion: nil)
                     
