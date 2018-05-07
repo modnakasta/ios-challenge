@@ -44,7 +44,7 @@ extension ViewController {
     class SaleCell: UICollectionViewCell {
         let header = UILabel()
         let footer = UIButton()
-        let items = [SaleItemView(), SaleItemView(), SaleItemView()]
+        private let items: [SaleItemView] = [SaleItemView(), SaleItemView(), SaleItemView()]
         
         static let height: CGFloat = 282.0
         
