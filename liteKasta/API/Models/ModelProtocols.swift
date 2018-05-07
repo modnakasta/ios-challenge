@@ -37,6 +37,16 @@ extension Array where Element: TimeFramed {
     }
 }
 
+protocol Modded {
+    var mods: [KastaAPI.Campaign.Mod]? { get }
+}
+
+extension Array where Element: Modded {
+    func filterVirtual() -> [Element] {
+        return self.filter({ !(($0.mods?.contains(where: { $0.name == "virtual" })) ?? false) })
+    }
+}
+
 protocol Tagged {
     var tags: String { get }
 }
