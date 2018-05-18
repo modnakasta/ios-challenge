@@ -71,38 +71,12 @@ extension ViewController: ListAdapterDataSource {
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        let controller = ListSingleSectionController(cellClass: CampaignCell.self, configureBlock: { (item, cell) in
-            
-            let campaignCell = cell as! CampaignCell
-            let campaign = item as! Campaign
-            
-            campaignCell.title.text = campaign.title
-            campaignCell.desc.text = campaign.desc
-            if let url = URL(string: "https://modnakasta.ua/imgw/loc/0x0/\(campaign.bannerPath)") {
-                campaignCell.picture.af_setImage(withURL: url)
-            }
-            
-        }, sizeBlock: { (item, context) -> CGSize in
-            
-            let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
-            let height = CampaignCell.desiredHeightFor(columnWidth: width)
-            
-            return CGSize(width: width, height: height)
-            
-        })
-        
-        guard case .success(let items) = state else {
-            fatalError("Fetch state != .success, the collection should have no sections, yet the adapter requests one, wtf?")
+        switch object {
+        case is SoonCampaigns:
+            return SectionFactory.createSoonSectionController(viewController: self, object: object)
+        default:
+            return SectionFactory.createCampaignSectionController(viewController: self, object: object)
         }
-        
-        controller.selectionDelegate = self
-        
-        let currentItem = object as! ListDiffable
-        let isFirstItem = currentItem.isEqual(toDiffableObject: items.first)
-        
-        controller.inset = UIEdgeInsets(top: isFirstItem ? 32 : 0, left: 16, bottom: 16, right: 16)
-        
-        return controller
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {
@@ -113,11 +87,32 @@ extension ViewController: ListAdapterDataSource {
             activityIndicator.startAnimating()
             return activityIndicator
             
-        case .failure(error: _):
+        case .failure(error: let error):
+            let errorView = UIView(frame: CGRect(x: 16, y: view.frame.midY/2, width: view.frame.width - 32, height: 100))
+            let label = UILabel()
+            label.frame = CGRect(x: 16, y: 0, width: errorView.bounds.width, height: 70)
+            label.center = errorView.center
+            label.textAlignment = .center
+            label.numberOfLines = 3
+            label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
+            label.textColor = .greyText
+            
             let button = UIButton(type: .system)
+            button.frame = CGRect(x: label.frame.origin.x, y: label.frame.maxY + 5, width: label.frame.width, height: label.frame.height)
+            button.contentHorizontalAlignment = .center
             button.setTitle(NSLocalizedString("error.reload-button.title", comment: "Data fetch retry button title"), for: .normal)
             button.addTarget(self, action: #selector(retry), for: UIControlEvents.touchUpInside)
-            return button
+            
+            switch (error as! MoyaError).errorDescription  {
+            case "The Internet connection appears to be offline.":
+                label.text = NSLocalizedString("error.connect.label.title", comment: "Data fetch error title")
+            default:
+                label.text = NSLocalizedString("error.decoding.label.title", comment: "Data fetch error title")
+            }
+            
+            errorView.addSubview(label)
+            errorView.addSubview(button)
+            return errorView
             
         case .success(items: _):
             return nil
@@ -137,11 +132,15 @@ extension ViewController {
                     
                 case .success(let response):
                     let response = try response.filterSuccessfulStatusAndRedirectCodes()
-                    let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
-                    let (activeCampaigns, _) = campaigns.filterActive(for: Date())
-                    let viewModels = activeCampaigns.map() { return Campaign(with: $0) }
+                    var campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
+                    campaigns = self.filterWithoutVirtual(campaigns: campaigns)
+                    let (activeCampaigns, soonCampaigns, _) = campaigns.filterActiveWithSoon(for: Date())
+                    var viewModels = activeCampaigns.map() { return Campaign(with: $0) } as [ListDiffable]
+                    let soon = SoonCampaigns(with: soonCampaigns)
+                    viewModels.insert(soon, at: 3)
                     self.state = .success(items: viewModels)
                     self.adapter.performUpdates(animated: true, completion: nil)
+                    
                     
                 case .failure(let error):
                     throw error
@@ -154,6 +153,17 @@ extension ViewController {
                 self.adapter.performUpdates(animated: true, completion: nil)
 
             }
+        }
+    }
+    
+    func filterWithoutVirtual(campaigns: [KastaAPI.Campaign]) -> [KastaAPI.Campaign] {
+        return campaigns.filter{
+            if let mods = $0.mods  {
+                for mod in mods {
+                    return mod["name"] != "virtual"
+                }
+            }
+            return true
         }
     }
 }

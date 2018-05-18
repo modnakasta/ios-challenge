@@ -21,5 +21,8 @@ extension UIColor {
     static let appBackground = UIColor(rgb: 0x20202A)
     static let campaignCellBackground = UIColor.white
     static let normalText = UIColor.black
+    static let greenText = UIColor(rgb: 0x4FB748)
+    static let greyText = UIColor(rgb: 0xD2D2D4)
+    static let descriptionGreyText = UIColor(rgb: 0x8E8E93)
 }
 

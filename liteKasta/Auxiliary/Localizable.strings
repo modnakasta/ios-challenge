@@ -6,4 +6,8 @@
   Copyright © 2018 Markason LLC. All rights reserved.
 */
 
-"error.reload-button.title" = "Повторить?";
+"error.reload-button.title" = "Попробовать еще раз?";
+"soon.campaing.title" = "Cкоро в продаже";
+"all.soon.camping.button" = "Все предстоящие акции";
+"error.connect.label.title" = "Не возможно подключиться к modnaKasta";
+"error.decoding.label.title" = "Упс, у нас что то прошло не так, мы приносим извинения и просим попробовать позже";

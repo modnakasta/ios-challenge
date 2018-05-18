@@ -35,6 +35,30 @@ extension Array where Element: TimeFramed {
         }
         return (active, validUntil)
     }
+    
+    func filterActiveWithSoon(for date: Date) -> ([Element], [Element], Date) {
+        var validUntil = Date.distantFuture
+        var active = [Element]()
+        var soon = [Element]()
+        for aModel in self {
+            assert(aModel.startsAt < aModel.finishesAt)
+            // Закончилась в прошлом
+            if aModel.finishesAt <= date {
+                continue;
+            }
+                // Начнется и закончится в будущем
+            else if aModel.startsAt > date {
+                validUntil = Swift.min(validUntil, aModel.startsAt)
+                soon.append(aModel)
+            }
+                // Уже началась и еще не закончилась
+            else {
+                validUntil = Swift.min(validUntil, aModel.finishesAt)
+                active.append(aModel)
+            }
+        }
+        return (active, soon, validUntil)
+    }
 }
 
 protocol Tagged {
