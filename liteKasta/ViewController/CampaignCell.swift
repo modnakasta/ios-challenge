@@ -15,8 +15,8 @@ extension ViewController {
         let picture = UIImageView()
         let cornersOverlay = UIImageView(image: UIImage(named: "CampaignCell/4ptClipCorners"))
         
-        static let pictureAspect: CGFloat = 1.0 / 0.55
-        static let captionBlockHeight: CGFloat = 76
+        static let pictureAspect: CGFloat = 1.0 / 0.5602
+        static let captionBlockHeight: CGFloat = 76 //121
 
         override init(frame: CGRect) {
             super.init(frame: frame)
