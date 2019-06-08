@@ -20,6 +20,8 @@
 		A7EE88082072630600CB7588 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EE88072072630600CB7588 /* ViewController.swift */; };
 		A7EE880D2072630600CB7588 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE880C2072630600CB7588 /* Assets.xcassets */; };
 		A7EE88102072630600CB7588 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7EE880E2072630600CB7588 /* LaunchScreen.storyboard */; };
+		C8D8923922ABD8910029E9A4 /* SoonCampaignCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D8923822ABD8910029E9A4 /* SoonCampaignCell.swift */; };
+		C8D8923B22ABE3FB0029E9A4 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D8923A22ABE3FB0029E9A4 /* NetworkManager.swift */; };
 		D0DD05360B4401ACAE664BF9 /* Pods_liteKasta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A09F010E4D2AD136FF375E8 /* Pods_liteKasta.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,8 @@
 		A7EE880F2072630600CB7588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A7EE88112072630600CB7588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C66EDB89014D4C691D12592F /* Pods-liteKasta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-liteKasta.debug.xcconfig"; path = "Pods/Target Support Files/Pods-liteKasta/Pods-liteKasta.debug.xcconfig"; sourceTree = "<group>"; };
+		C8D8923822ABD8910029E9A4 /* SoonCampaignCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoonCampaignCell.swift; sourceTree = "<group>"; };
+		C8D8923A22ABE3FB0029E9A4 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,7 @@
 				A7EE88072072630600CB7588 /* ViewController.swift */,
 				A74C16402073AFFC006459C3 /* ViewControllerState.swift */,
 				A74C16422073B9BE006459C3 /* CampaignCell.swift */,
+				C8D8923822ABD8910029E9A4 /* SoonCampaignCell.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 			children = (
 				A7CE3FD12073887500D77D41 /* APIStubs.swift */,
 				A7CE3FCF2073875600D77D41 /* KastaAPI.swift */,
+				C8D8923A22ABE3FB0029E9A4 /* NetworkManager.swift */,
 				A74C163620738A46006459C3 /* Models */,
 			);
 			path = API;
@@ -281,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8D8923B22ABE3FB0029E9A4 /* NetworkManager.swift in Sources */,
 				A74C163820738A50006459C3 /* API.Campaign.swift in Sources */,
 				A74C163F20739EBA006459C3 /* CampaignViewModel.swift in Sources */,
 				A7CE3FD02073875600D77D41 /* KastaAPI.swift in Sources */,
@@ -290,6 +297,7 @@
 				A7EE88062072630600CB7588 /* AppDelegate.swift in Sources */,
 				A74C16412073AFFC006459C3 /* ViewControllerState.swift in Sources */,
 				A74C163A20738A83006459C3 /* ModelProtocols.swift in Sources */,
+				C8D8923922ABD8910029E9A4 /* SoonCampaignCell.swift in Sources */,
 				A7CE3FD22073887500D77D41 /* APIStubs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,7 +437,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KFURPFJ8QD;
+				DEVELOPMENT_TEAM = 5H6NLDH7PG;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -444,7 +452,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KFURPFJ8QD;
+				DEVELOPMENT_TEAM = 5H6NLDH7PG;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

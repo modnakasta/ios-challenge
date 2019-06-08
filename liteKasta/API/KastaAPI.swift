@@ -21,6 +21,10 @@ extension KastaAPI: TargetType {
         return URL(string: KastaAPI.baseAddress + "/api/v2/")!
     }
     
+    static var soonURL: URL {
+        return URL(string: KastaAPI.baseAddress + "/#soon")!
+    }
+    
     var path: String {
         switch self {
         case .campaigns:

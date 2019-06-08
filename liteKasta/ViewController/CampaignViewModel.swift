@@ -27,6 +27,14 @@ extension ViewController {
             super.init()
         }
     }
+    
+    class SoonCampaign: NSObject {
+        let campaigns: [Campaign]
+        
+        init(with aCampaigns: [KastaAPI.Campaign]) {
+            campaigns = aCampaigns.map() { Campaign(with: $0) }
+        }
+    }
 }
 
 extension ViewController.Campaign: ListDiffable {
@@ -39,6 +47,19 @@ extension ViewController.Campaign: ListDiffable {
             return false
         }
         return title == o.title && desc == o.desc && countdownToDate == o.countdownToDate && bannerPath == o.bannerPath
+    }
+}
+
+extension ViewController.SoonCampaign: ListDiffable {
+    func diffIdentifier() -> NSObjectProtocol {
+        return hashValue as NSNumber
+    }
+    
+    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+        guard let o = object as? ViewController.SoonCampaign else {
+            return false
+        }
+        return campaigns == o.campaigns
     }
 }
 

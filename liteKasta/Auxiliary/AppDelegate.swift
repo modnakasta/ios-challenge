@@ -17,7 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow()
-        window!.rootViewController = ViewController(provider: MoyaProvider<KastaAPI>())
+        let networkManager = NetworkManager(provider: MoyaProvider<KastaAPI>())
+        window!.rootViewController = ViewController(networkManager: networkManager)
         window!.makeKeyAndVisible()
         
         return true

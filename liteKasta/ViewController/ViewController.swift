@@ -7,18 +7,23 @@
 //
 
 import IGListKit
-import Moya
 import AlamofireImage
+
+typealias activeAndSoonCampaigns = (active: [KastaAPI.Campaign], soon: [KastaAPI.Campaign])
 
 class ViewController: UIViewController {
     
-    let provider: MoyaProvider<KastaAPI>
-    var state = State.initialFetch
+    let networkManager: NetworkManager // Actualy this should be in a Model, but - there's no time for MVC/MVVM stack :/
+    var state = State.initialFetch {
+        didSet {
+            self.adapter.performUpdates(animated: true, completion: nil)
+        }
+    }
     
     // MARK: - NSObject
     
-    init(provider: MoyaProvider<KastaAPI>) {
-        self.provider = provider
+    init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,7 +38,7 @@ class ViewController: UIViewController {
     lazy var adapter = ListAdapter(updater: ListAdapterUpdater(), viewController: self)
     
     override func loadView() {
-        view = UIView()
+        super.loadView() // Is this was forgotten on purpose?
         view.backgroundColor = .appBackground
 
         collectionView.backgroundColor = view.backgroundColor
@@ -71,26 +76,16 @@ extension ViewController: ListAdapterDataSource {
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        let controller = ListSingleSectionController(cellClass: CampaignCell.self, configureBlock: { (item, cell) in
-            
-            let campaignCell = cell as! CampaignCell
-            let campaign = item as! Campaign
-            
-            campaignCell.title.text = campaign.title
-            campaignCell.desc.text = campaign.desc
-            if let url = URL(string: "https://modnakasta.ua/imgw/loc/0x0/\(campaign.bannerPath)") {
-                campaignCell.picture.af_setImage(withURL: url)
-            }
-            
-        }, sizeBlock: { (item, context) -> CGSize in
-            
-            let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
-            let height = CampaignCell.desiredHeightFor(columnWidth: width)
-            
-            return CGSize(width: width, height: height)
-            
-        })
         
+        var controller: ListSingleSectionController!
+        switch object {
+        case is ViewController.SoonCampaign:
+            controller = SoonCampaignCell.listSingleSectionController()
+        case is ViewController.Campaign:
+            controller = CampaignCell.listSingleSectionController()
+        default:
+            fatalError("This shouldn't happened")
+        }
         guard case .success(let items) = state else {
             fatalError("Fetch state != .success, the collection should have no sections, yet the adapter requests one, wtf?")
         }
@@ -131,29 +126,28 @@ extension ViewController: ListAdapterDataSource {
 
 extension ViewController {
     func fetch() {
-        provider.request(.campaigns) { result in
-            do {
-                switch result {
+        // cause working with network in VC isn't the best decision (:
+        networkManager.fetch { [weak self] (campaings, error)  in
+            if let error = error {
+                self?.state = .failure(error: error)
+            } else if let campaings = campaings {
+                
+                let activeCampaigns: [ListDiffable] = campaings.active.map() { return ViewController.Campaign(with: $0) }
+                var viewModels = activeCampaigns
+
+                if !campaings.soon.isEmpty { // There might be no soon campaigns
+                    let soonCampaing = ViewController.SoonCampaign(with: campaings.soon)
                     
-                case .success(let response):
-                    let response = try response.filterSuccessfulStatusAndRedirectCodes()
-                    let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
-                    let activeCampaigns = campaigns.filterActive(for: Date()).0
-                    let notVirtualCampaigns = activeCampaigns.filter { !$0.isVirtual }
-                    let viewModels = notVirtualCampaigns.map() { return Campaign(with: $0) }
-                    self.state = .success(items: viewModels)
-                    self.adapter.performUpdates(animated: true, completion: nil)
-                    
-                case .failure(let error):
-                    throw error
+                    if viewModels.count > 3 {
+                        viewModels.insert(soonCampaing, at: 3)
+                    } else {
+                        viewModels.append(soonCampaing)
+                    }
                 }
                 
-            }
-                
-            catch let error {
-                self.state = .failure(error: error)
-                self.adapter.performUpdates(animated: true, completion: nil)
-
+                self?.state = .success(items: viewModels)
+            } else {
+                fatalError("This shouldn't happened")
             }
         }
     }
