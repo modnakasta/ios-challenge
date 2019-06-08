@@ -138,8 +138,9 @@ extension ViewController {
                 case .success(let response):
                     let response = try response.filterSuccessfulStatusAndRedirectCodes()
                     let campaigns = try response.map([KastaAPI.Campaign].self, atKeyPath: "items", using: KastaAPI.Campaign.decoder)
-                    let (activeCampaigns, _) = campaigns.filterActive(for: Date())
-                    let viewModels = activeCampaigns.map() { return Campaign(with: $0) }
+                    let activeCampaigns = campaigns.filterActive(for: Date()).0
+                    let notVirtualCampaigns = activeCampaigns.filter { !$0.isVirtual }
+                    let viewModels = notVirtualCampaigns.map() { return Campaign(with: $0) }
                     self.state = .success(items: viewModels)
                     self.adapter.performUpdates(animated: true, completion: nil)
                     

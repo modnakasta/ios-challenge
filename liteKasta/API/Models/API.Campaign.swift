@@ -15,21 +15,29 @@ extension KastaAPI {
         let description: String
         let startsAt: Date
         let finishesAt: Date
+        let mods: [Mod]
         let nowImage: String
         let tags: String
         let codename: String
+        // MARK: Aditional - for hiding virtual promotions
+        var isVirtual: Bool { return mods.contains(where: { $0.name == "virtual" }) }
         
         static let decoder = KastaAPI.standardDecoder
         
-        enum CodingKeys: CodingKey, String {
+        enum CodingKeys: String, CodingKey {
             case id = "id"
             case name = "name"
             case description = "description"
             case startsAt = "starts_at"
             case finishesAt = "finishes_at"
+            case mods = "mods"
             case nowImage = "now_image"
             case tags = "tags"
             case codename = "code_name"
         }
+    }
+    
+    struct Mod: Codable {
+        let name: String
     }
 }
