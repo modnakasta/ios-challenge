@@ -108,11 +108,31 @@ extension ViewController: ListAdapterDataSource {
             activityIndicator.startAnimating()
             return activityIndicator
             
-        case .failure(error: _):
-            let button = UIButton(type: .system)
+        case .failure(error: let error):
+            
+            let warningView = UIView(frame: CGRect(x: 0,
+                                                   y: view.frame.midY-100,
+                                                   width: view.frame.width-32,
+                                                   height: 100))
+            
+            let errorText = error.localizedDescription == "The Internet connection appears to be offline." ? "Не удалось связаться с сервером" : "Не удалось расшифровать ответ из сервера"
+            let warningLabel = UILabel(frame: CGRect(x: 16, y: view.frame.midY-100, width: view.frame.width-32, height: 70))
+            warningLabel.textAlignment = .center
+            warningLabel.text = errorText
+            warningLabel.textColor = .white
+            warningLabel.font = UIFont.systemFont(ofSize: 22)
+            warningLabel.numberOfLines = 0
+            
+            let button = UIButton(frame: CGRect(x: 16,
+                                                y: warningLabel.frame.maxY,
+                                                width: warningLabel.frame.width,
+                                                height: 30))
             button.setTitle(NSLocalizedString("error.reload-button.title", comment: "Data fetch retry button title"), for: .normal)
             button.addTarget(self, action: #selector(retry), for: UIControlEvents.touchUpInside)
-            return button
+            
+            warningView.addSubview(warningLabel)
+            warningView.addSubview(button)
+            return warningView
             
         case .success(items: _):
             return nil

@@ -98,11 +98,15 @@ extension ViewController {
                 }
             }, sizeBlock: { (item, context) -> CGSize in
                 
+                let titleHeight: CGFloat = 45
+                let buttonHeight: CGFloat = 45
+                let promotionViewHeight: CGFloat = 64
+                
                 guard let soonCampaign = item as? SoonCampaign else { return .zero }
                 let countOfCampaigns = min(soonCampaign.campaigns.count, 3)
 
                 let width = context!.insetContainerSize.width - 32 // 16pt inset on each side
-                let height = 64 * CGFloat(countOfCampaigns) + 90
+                let height = promotionViewHeight * CGFloat(countOfCampaigns) + (titleHeight + buttonHeight)
                 
                 return CGSize(width: width, height: height)
             })
@@ -110,7 +114,6 @@ extension ViewController {
         }
     }
 }
-
 
 class PromotionView: UIView {
     
